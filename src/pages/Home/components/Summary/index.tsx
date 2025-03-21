@@ -1,8 +1,9 @@
 import { SummaryAnchors, SummaryContainer, SummaryHeader } from "./styles";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { ArrowUpRight, Buildings, GithubLogo, Users } from "phosphor-react";
+import { api } from "../../../../lib/axios";
 
 interface User {
   avatar_url: string;
@@ -20,13 +21,22 @@ export function Summary() {
   // "https://api.github.com/search"
   // "https://api.github.com/repos/lucaspedronet/TudoLista/issues"
 
+  async function userData() {
+    const response = await api.get("/users/arthurteixeiradev");
+    setUser(response.data);
+  }
+
+  useEffect(() => {
+    userData();
+  }, []);
+
   return (
     <SummaryContainer>
       <img src={user?.avatar_url} />
       <section>
         <SummaryHeader>
           <h1>{user?.name}</h1>
-          <a href="http://github.com/Lucaspedronet" target="_blank">
+          <a href="http://github.com/arthurteixeiradev" target="_blank">
             GITHUB
             <ArrowUpRight size={12} />
           </a>

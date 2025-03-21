@@ -13,11 +13,47 @@ import {
   PostTitle,
 } from "./styles";
 
-import { NavLink } from "react-router-dom";
+import { NavLink, useParams } from "react-router-dom";
 import { dateFormatter } from "../../utils/formatter";
+import { useEffect, useState } from "react";
+import { api } from "../../lib/axios";
 
+interface Issue {
+  number: number;
+  title: string;
+  body: string;
+  created_at: string;
+  user: { login: string };
+  comments: number;
+  html_url: string;
+}
 
 export function Post() {
+  const { number } = useParams();
+  const [issueData, setIssueData] = useState<Issue | null>(null);
+
+  async function fetchIssue() {
+    const response = await api.get(`/repos/lucaspedronet/TudoLista/issues`);
+    console.log(response);
+    setIssueData(response.data);
+  }
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      fetchIssue();
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, [number]);
+
+  if (!issueData) {
+    return (
+      <p style={{ textAlign: "center", paddingTop: "1rem" }}>
+        Carregando Post...
+      </p>
+    );
+  }
+
+  console.log(issueData);
 
   return (
     <PostContainer>
@@ -26,10 +62,8 @@ export function Post() {
           <div>
             <p>
               <NavLink to="/">
-                <a href="">
-                  <CaretLeft size={16} />
-                  VOLTAR
-                </a>
+                <CaretLeft size={16} />
+                VOLTAR
               </NavLink>
             </p>
           </div>
