@@ -23,7 +23,8 @@ export function Summary() {
 
   async function userData() {
     try {
-      const response = await api.get("/users/arthurteixeiradev");
+      const response = await api.get<UserProps>("/users/arthurteixeiradev");
+      console.log(response.data);
       setUser(response.data);
     } catch (error) {
       console.log("Deu ruim...", error);
