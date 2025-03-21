@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { ArrowUpRight, Buildings, GithubLogo, Users } from "phosphor-react";
 import { api } from "../../../../lib/axios";
 
-interface User {
+interface UserProps {
   avatar_url: string;
   name: string;
   bio: string;
@@ -15,15 +15,19 @@ interface User {
 }
 
 export function Summary() {
-  const [user, setUser] = useState<User | undefined>(undefined);
+  const [user, setUser] = useState<UserProps | undefined>(undefined);
 
   // "https://api.github.com/users", "/lucaspedronet"
   // "https://api.github.com/search"
   // "https://api.github.com/repos/lucaspedronet/TudoLista/issues"
 
   async function userData() {
-    const response = await api.get("/users/arthurteixeiradev");
-    setUser(response.data);
+    try {
+      const response = await api.get("/users/arthurteixeiradev");
+      setUser(response.data);
+    } catch (error) {
+      console.log("Deu ruim...", error);
+    }
   }
 
   useEffect(() => {

@@ -13,12 +13,12 @@ import {
   PostTitle,
 } from "./styles";
 
-import { NavLink, useParams } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { dateFormatter } from "../../utils/formatter";
 import { useEffect, useState } from "react";
 import { api } from "../../lib/axios";
 
-interface Issue {
+interface IssueProps {
   number: number;
   title: string;
   body: string;
@@ -29,21 +29,22 @@ interface Issue {
 }
 
 export function Post() {
-  const { number } = useParams();
-  const [issueData, setIssueData] = useState<Issue | null>(null);
-
-  async function fetchIssue() {
-    const response = await api.get(`/repos/lucaspedronet/TudoLista/issues`);
-    console.log(response);
-    setIssueData(response.data);
+  const [issueData, setIssueData] = useState<IssueProps | null>(null);
+  /*async function fetchIssue() {
+    try {
+      const response = await api.get(
+        `/repos/arthurteixeiradev/data-structures/issues`
+      );
+      console.log(response.data);
+      setIssueData(response.data);
+    } catch (error) {
+      console.error("Erro ao buscar a issue:", error);
+    }
   }
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      fetchIssue();
-    }, 1000);
-    return () => clearTimeout(timer);
-  }, [number]);
+    fetchIssue();
+  }, []);
 
   if (!issueData) {
     return (
@@ -53,7 +54,7 @@ export function Post() {
     );
   }
 
-  console.log(issueData);
+  console.log(issueData);*/
 
   return (
     <PostContainer>
