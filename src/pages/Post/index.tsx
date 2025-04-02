@@ -13,10 +13,48 @@ import {
   PostTitle,
 } from "./styles";
 
-import { NavLink } from "react-router-dom";
+import { NavLink, useParams } from "react-router-dom";
 import { dateFormatter } from "../../utils/formatter";
+import { useEffect, useState } from "react";
+import { api } from "../../lib/axios";
+
+interface IssueProps {
+  number: number;
+  title: string;
+  body: string;
+  created_at: string;
+  user: { login: string };
+  comments: number;
+  html_url: string;
+}
 
 export function Post() {
+  const { number } = useParams();
+  const [issueData, setIssueData] = useState<IssueProps | null>(null);
+
+  async function fetchIssue() {
+    try {
+      const response = await api.get(
+        `/repos/lucaspedronet/TudoLista/issues/${number}`
+      );
+      setIssueData(response.data);
+    } catch (error) {
+      console.log("Deu ruim...", error);
+    }
+  }
+
+  useEffect(() => {
+    fetchIssue();
+  }, [number]);
+
+  if (!issueData) {
+    return (
+      <p style={{ textAlign: "center", paddingTop: "1rem" }}>Carregando...</p>
+    );
+  }
+
+  console.log(issueData);
+
   return (
     <PostContainer>
       <PostHeader>
@@ -32,33 +70,33 @@ export function Post() {
             </p>
           </div>
           <div>
-            <a href="#" target="_blank">
+            <a href={issueData.html_url} target="_blank">
               VER NO GITHUB
               <ArrowUpRight size={16} />
             </a>
           </div>
         </PostTitle>
-        <h1></h1>
+        <h1>{issueData.title}</h1>
         <PostAnchors>
           <div>
             <GithubLogo size={18} />
-            <span></span>
+            <span>{issueData.user.login}</span>
           </div>
 
           <div>
             <Calendar size={18} />
-            <span></span>
+            <span>{dateFormatter.format(new Date(issueData.created_at))}</span>
           </div>
 
           <div>
             <ChatCircle size={18} />
-            <span> comentários</span>
+            <span>{issueData.comments} comentários</span>
           </div>
         </PostAnchors>
       </PostHeader>
 
       <PostContent>
-        <p></p>
+        <p>{issueData.body}</p>
       </PostContent>
     </PostContainer>
   );

@@ -41,7 +41,7 @@ export function Summary() {
       <section>
         <SummaryHeader>
           <h1>{user?.name}</h1>
-          <a href="http://github.com/arthurteixeiradev" target="_blank">
+          <a href={`http://github.com/${user?.login}`} target="_blank">
             GITHUB
             <ArrowUpRight size={12} />
           </a>
